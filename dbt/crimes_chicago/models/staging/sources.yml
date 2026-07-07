@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: public
+    description: >
+      Espelho da fonte transacional. Tabela carregada script Python
+      a partir do CSV de Crimes em Chicago. Representa a
+      "fonte de dados transacionais" da arquitetura Kimball.
+    tables:
+      - name: crimes_raw
