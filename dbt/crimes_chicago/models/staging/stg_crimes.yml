@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: stg_crimes
+    description: >
+      Camada de staging sobre a source raw.crimes_raw. Um registro por
+      crime, deduplicado por id mantendo a versão com updated_at mais recente.
+    columns:
+      - name: id
+        description: Chave natural do crime na fonte (campo "ID" do portal de Chicago).
+        tests:
+          - unique
+          - not_null
+      - name: occurred_at
+        description: Timestamp do crime (parseado a partir do texto MM/DD/YYYY HH:MI:SS AM/PM).
+        tests:
+          - not_null
+      - name: is_arrest
+        tests:
+          - accepted_values:
+              arguments:
+                values: [true, false]
+      - name: is_domestic
+        tests:
+          - accepted_values:
+              arguments:
+                values: [true, false]
+

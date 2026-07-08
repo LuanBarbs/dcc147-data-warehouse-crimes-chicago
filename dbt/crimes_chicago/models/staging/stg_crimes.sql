@@ -2,57 +2,98 @@
 -- Limpeza e tipagem da fonte transacional. Nenhuma regra de negócio aqui,
 -- apenas normalização de nomes e tipos de coluna.
 
+{{
+  config(
+    materialized='view'
+  )
+}}
+
 with source as (
     select * from {{ source('raw', 'crimes_raw') }}
 ),
 
 cleaned as (
+
     select
-        "ID"::bigint                                                  as crime_id,
-        "Case Number"::text                                           as case_number,
-        to_timestamp(nullif(trim("Date"), ''), 'MM/DD/YYYY HH12:MI:SS AM') as date, -- comverte '09/15/2023 08:30:15 PM' para 2023-09-15 20:30:15
-                                                                        
-        "Block"::text                                                 as block,
-        "IUCR"::text                                                  as iucr_code,
-        "Primary Type"::text                                          as primary_type,
-        "Description"::text                                           as crime_description,
-        "Location Description"::text                                  as location_description,
-        lower(trim("Arrest"))::boolean                                as arrest_flag,
-        lower(trim("Domestic"))::boolean                              as domestic_flag,
-
-        case when trim("Beat") in ('', 'NaN') then null
-             else trim("Beat") end::numeric::int                      as beat,
-
-        case when trim("District") in ('', 'NaN') then null
-             else trim("District") end::numeric::int                  as district,
-
-        case when trim("Ward") in ('', 'NaN') then null
-             else trim("Ward") end::numeric::int                      as ward,
-
-        case when trim("Community Area") in ('', 'NaN') then null
-             else trim("Community Area") end::numeric::int            as community_area,
-
-        "FBI Code"::text                                              as fbi_code,
-
-        case when trim("X Coordinate") in ('', 'NaN') then null
-             else trim("X Coordinate") end::numeric                   as x_coordinate,
-
-        case when trim("Y Coordinate") in ('', 'NaN') then null
-             else trim("Y Coordinate") end::numeric                   as y_coordinate,
-
-        case when trim("Year") in ('', 'NaN') then null
-             else trim("Year") end::numeric::int                      as year,
-
-        to_timestamp(nullif(trim("Updated On"), ''), 'MM/DD/YYYY HH12:MI:SS AM')  as updated_on,  -- comverte '09/15/2023 08:30:15 PM' para 2023-09-15 20:30:15
-                                                                       
-        case when trim("Latitude") in ('', 'NaN') then null
-             else trim("Latitude") end::numeric                       as latitude,
-
-        case when trim("Longitude") in ('', 'NaN') then null
-             else trim("Longitude") end::numeric                      as longitude
+        nullif(trim("ID"::text), 'NaN')                              as crime_id,
+        nullif(trim("Case Number"::text), 'NaN')                     as case_number,
+        nullif(trim("Date"::text), 'NaN')                             as date_txt,
+        nullif(trim("Updated On"::text), 'NaN')                       as updated_on_txt,
+        nullif(trim("Block"::text), 'NaN')                            as block,
+        nullif(trim("IUCR"::text), 'NaN')                             as iucr,
+        nullif(trim("Primary Type"::text), 'NaN')                     as primary_type,
+        nullif(trim("Description"::text), 'NaN')                      as description,
+        nullif(trim("Location Description"::text), 'NaN')             as location_description,
+        nullif(trim("Arrest"::text), 'NaN')                           as arrest_txt,
+        nullif(trim("Domestic"::text), 'NaN')                         as domestic_txt,
+        nullif(trim("Beat"::text), 'NaN')                             as beat,
+        split_part(nullif(trim("District"::text), 'NaN'), '.', 1)     as district,
+        split_part(nullif(trim("Ward"::text), 'NaN'), '.', 1)         as ward,
+        split_part(nullif(trim("Community Area"::text), 'NaN'), '.', 1) as community_area,
+        nullif(trim("FBI Code"::text), 'NaN')                         as fbi_code,
+        nullif(trim("Latitude"::text), 'NaN')                        as latitude_txt,
+        nullif(trim("Longitude"::text), 'NaN')                       as longitude_txt
     from source
-    where "Date" is not null
-      and "ID" is not null
+
+),
+
+typed as (
+
+    select
+        crime_id::bigint                                              as id,
+        case_number,
+        to_timestamp(date_txt, 'MM/DD/YYYY HH12:MI:SS AM')          as date,
+        to_timestamp(updated_on_txt, 'MM/DD/YYYY HH12:MI:SS AM')    as updated_on,
+        block,
+        iucr,
+        primary_type,
+        description,
+        location_description,
+        (lower(arrest_txt) = 'true')                                as is_arrest,--verificar o boolean
+        (lower(domestic_txt) = 'true')                              as is_domestic,
+        beat,
+        district,
+        ward,
+        community_area,
+        fbi_code,
+        latitude_txt::numeric                                       as latitude,
+        longitude_txt::numeric                                      as longitude
+    from cleaned
+    where crime_id is not null
+      and date_txt is not null
+
+),
+
+deduplicado as (
+
+    select
+        *,
+        row_number() over (
+            partition by id
+            order by updated_on desc nulls last
+        ) as rn
+    from typed
+
 )
 
-select * from cleaned
+select
+    id,
+    case_number,
+    date,
+    updated_on,
+    block,
+    iucr,
+    primary_type,
+    description,
+    location_description,
+    is_arrest,
+    is_domestic,
+    beat,
+    district,
+    ward,
+    community_area,
+    fbi_code,
+    latitude,
+    longitude
+from deduplicado
+where rn = 1
