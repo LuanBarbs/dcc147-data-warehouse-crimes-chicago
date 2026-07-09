@@ -11,7 +11,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: occurred_at
+      - name: date
         description: Timestamp do crime (parseado a partir do texto MM/DD/YYYY HH:MI:SS AM/PM).
         tests:
           - not_null
@@ -26,3 +26,10 @@ models:
               arguments:
                 values: [true, false]
 
+  - name: int_tipo_crime_atual
+    description: >
+      Estado atual (1 linha por IUCR) usado como fonte do snapshot
+      dim_tipo_crime_snapshot para gerar a SCD Tipo 2.
+    columns:
+      - name: iucr
+        tests: [unique, not_null]

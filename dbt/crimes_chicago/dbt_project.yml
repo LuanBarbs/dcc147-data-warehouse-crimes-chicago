@@ -34,3 +34,9 @@ models:
     staging:
       +materialized: view
       +schema: staging
+
+
+vars:
+  # Data mínima considerada para a dim_tempo 
+  data_inicio_dw: '2001-01-01'
+  data_fim_dw: '2026-12-31'

@@ -1,0 +1,139 @@
+version: 2
+
+models:
+  # ---------------------------------------------------------------------
+  # DIMENSÕES
+  # ---------------------------------------------------------------------
+  - name: dim_tempo
+    description: >
+      Dimensão de calendário.  Grão: 1 linha por
+      combinação (dia, hora). Colunas iguais ao diagrama: sk_tempo,
+      data_completa, ano, trimestre, mes, dia, hora.
+    columns:
+      - name: sk_tempo
+        tests: [unique, not_null]
+      - name: ano
+        tests: [not_null]
+      - name: mes
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1,2,3,4,5,6,7,8,9,10,11,12]
+      - name: hora
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+
+  - name: dim_tempo_mes_ano
+    description: >
+      Dimensão com apenas mes e ano.  Grão: 1 linha por
+      combinação (ano, mes). Usada nos fatos fct_total_crimes e fct_ranking_beat
+    columns:
+      - name: sk_tempo
+        tests: [unique, not_null]
+      - name: ano
+        tests: [not_null]
+      - name: mes
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1,2,3,4,5,6,7,8,9,10,11,12]
+
+  - name: dim_local
+    description: >
+      Dimensao do local do evento: distrito, arecomunitaria e beat. Grão: beat.
+    columns:
+      - name: sk_local
+        tests: [unique, not_null]
+      - name: beat
+        tests: [not_null]
+
+  - name: dim_local_evento
+    description: >
+      Dimensão do tipo de local do evento, casa, rua, ect. Colunas sk_local_evento, location_description 
+    columns:
+      - name: sk_local_evento
+        tests: [unique, not_null]
+
+  - name: dim_tipo_crime
+    description: >
+      Dimensão SCD Tipo 2 de tipo de crime (IUCR). São necessárias para o controle de histórico da SCD2
+    columns:
+      - name: sk_tipo_crime
+        tests: [unique, not_null]
+      - name: iucr
+        tests: [not_null]
+      - name: is_current
+        tests: [not_null]
+  # ---------------------------------------------------------------------
+  # FATOS
+  # ---------------------------------------------------------------------
+  - name: fct_crime
+    description: >
+      Fato atômico e transacional. Grão real: 1 linha por crime 
+    columns:
+      - name: id
+        tests: [unique, not_null]
+      - name: case_number.
+      - name: sk_tempo
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tempo')
+                field: sk_tempo
+      - name: sk_local
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_local')
+                field: sk_local
+      - name: sk_tipo_crime
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_tipo_crime')
+                field: sk_tipo_crime
+      - name: sk_local_evento
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_local_evento')
+                field: sk_local_evento
+      - name: quant_crime
+        tests: [not_null]
+
+  - name: fct_intervalo_ocorrencia
+    description: >
+      Fato agregado. Grão: beat x tipo de crime x dia. Processo de
+      negócio: "análise de intervalo entre crimes do mesmo tipo
+      na mesma região".
+    columns:
+      - name: id
+        tests: [unique, not_null]
+
+  - name: fct_total_crimes
+    description: >
+      Fato agregado. Grão: mês x distrito x tipo de crime. Processo de
+      negócio: "acompanhamento gerencial mensal de volume de crimes por
+      distrito".
+    columns:
+      - name: id
+        tests: [unique, not_null]
+      - name: qtd_total_crimes
+        tests: [not_null]
+
+  - name: fct_ranking_beat
+    description: >
+      Fato agregado. Grão: mês x beat. Processo de negócio:
+      "ranking mensal dos beats com mais crimes, para priorização de
+      policiamento".
+    columns:
+      - name: id
+        tests: [unique, not_null]
+      - name: ranking_posicao
+        tests: [not_null]

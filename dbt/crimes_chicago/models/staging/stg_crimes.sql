@@ -1,6 +1,5 @@
 -- models/staging/stg_crimes.sql
--- Limpeza e tipagem da fonte transacional. Nenhuma regra de negócio aqui,
--- apenas normalização de nomes e tipos de coluna.
+-- Limpeza e tipagem da fonte transacional.
 
 {{
   config(
@@ -13,7 +12,6 @@ with source as (
 ),
 
 cleaned as (
-
     select
         nullif(trim("ID"::text), 'NaN')                              as crime_id,
         nullif(trim("Case Number"::text), 'NaN')                     as case_number,
@@ -34,11 +32,9 @@ cleaned as (
         nullif(trim("Latitude"::text), 'NaN')                        as latitude_txt,
         nullif(trim("Longitude"::text), 'NaN')                       as longitude_txt
     from source
-
 ),
 
 typed as (
-
     select
         crime_id::bigint                                              as id,
         case_number,
@@ -61,11 +57,9 @@ typed as (
     from cleaned
     where crime_id is not null
       and date_txt is not null
-
 ),
 
 deduplicado as (
-
     select
         *,
         row_number() over (
@@ -73,7 +67,6 @@ deduplicado as (
             order by updated_on desc nulls last
         ) as rn
     from typed
-
 )
 
 select

@@ -12,15 +12,10 @@ sources:
         columns:
           - name: id
             description: Identificador único do registro na fonte (chave primária natural).
-            tests:
-              - unique
-              - not_null
           - name: case_number
             description: Número do boletim de ocorrência (BO). Pode se repetir entre registros relacionados.
           - name: date
             description: Data/hora em que o crime ocorreu (ou foi reportado, quando a hora exata é desconhecida).
-            tests:
-              - not_null
           - name: block
             description: Endereço parcialmente anonimizado (quarteirão) do local do crime.
           - name: iucr
