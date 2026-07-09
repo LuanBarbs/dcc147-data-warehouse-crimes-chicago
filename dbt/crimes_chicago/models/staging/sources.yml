@@ -9,3 +9,51 @@ sources:
       "fonte de dados transacionais" da arquitetura Kimball.
     tables:
       - name: crimes_raw
+        columns:
+          - name: id
+            description: Identificador único do registro na fonte (chave primária natural).
+            tests:
+              - unique
+              - not_null
+          - name: case_number
+            description: Número do boletim de ocorrência (BO). Pode se repetir entre registros relacionados.
+          - name: date
+            description: Data/hora em que o crime ocorreu (ou foi reportado, quando a hora exata é desconhecida).
+            tests:
+              - not_null
+          - name: block
+            description: Endereço parcialmente anonimizado (quarteirão) do local do crime.
+          - name: iucr
+            description: Illinois Uniform Crime Reporting code - código do tipo de crime.
+          - name: primary_type
+            description: Categoria primária do crime (ex. THEFT, BATTERY, NARCOTICS).
+          - name: description
+            description: Descrição secundária/detalhada do IUCR.
+          - name: location_description
+            description: Descrição do tipo de local onde ocorreu o crime (ex. STREET, RESIDENCE).
+          - name: arrest
+            description: Indica se houve prisão em flagrante associada ao crime.
+          - name: domestic
+            description: Indica se o crime foi classificado como violência doméstica.
+          - name: beat
+            description: Menor unidade geográfica de policiamento em Chicago.
+          - name: district
+            description: Distrito policial (agrupa vários beats).
+          - name: ward
+            description: Distrito eleitoral (ward) onde ocorreu o crime.
+          - name: community_area
+            description: Uma das 77 áreas comunitárias oficiais de Chicago.
+          - name: fbi_code
+            description: Classificação de crime segundo o FBI (NIBRS).
+          - name: x_coordinate
+            description: Coordenada X no sistema de projeção Illinois State Plane.
+          - name: y_coordinate
+            description: Coordenada Y no sistema de projeção Illinois State Plane.
+          - name: year
+            description: Ano extraído de "date" (coluna redundante já na fonte).
+          - name: updated_on
+            description: Timestamp da última atualização do registro na fonte.
+          - name: latitude
+            description: Latitude (WGS84).
+          - name: longitude
+            description: Longitude (WGS84).
