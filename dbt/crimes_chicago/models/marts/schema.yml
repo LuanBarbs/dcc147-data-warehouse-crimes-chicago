@@ -51,6 +51,13 @@ models:
         tests: [unique, not_null]
       - name: beat
         tests: [not_null]
+  
+  - name: dim_distrito
+    description: >
+      Dimensao do distrito usada no fato fct_total_crimes
+    columns:
+      - name: sk_distrito
+        tests: [unique, not_null]
 
   - name: dim_local_evento
     description: >
