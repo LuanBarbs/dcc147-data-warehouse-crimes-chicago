@@ -18,11 +18,10 @@ Repositório para o Trabalho Final da Disciplina DCC174 - Data Warehouse. O trab
 |----------|----------|----------|
 | Storage/DW | PostgreSQL Local | Armazena a fonte transacional e o modelo dimensional  |
 | Transformação (ETL) | dbt-core + dbt-postgres | Define modelos SQL versionados, snapshots para SCDs, documentação e linhagem automáticas |
-| Linha 3  | Dado 3   | Valor 3  |
-| Linha 4  | Dado 4   | Valor 4  |
-| Linha 5  | Dado 5   | Valor 5  |
-| Linha 6  | Dado 6   | Valor 6  |
-| Linha 7  | Dado 7   | Valor 7  |
+| Modelo semântico | Power BI Desktop (modelo de dados + DAX) | Substitui o “cubo” XMLA tradicional — relações, hierarquias e medidas vivem dentro do .pbix |
+| Relatórios estáticos | Power BI Report Builder | Relatórios paginados com parâmetros (filtros) |
+| Relatórios dinâmicos | Power BI Desktop | Slicers, drill-down, drill-through, cross-filter |
+| Dashboards | Power BI Desktop | Páginas interativas com cross filtering nativo |
 
 ---
 
