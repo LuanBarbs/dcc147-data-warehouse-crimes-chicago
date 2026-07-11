@@ -16,8 +16,8 @@ Repositório para o Trabalho Final da Disciplina DCC174 - Data Warehouse. O trab
 ## Stack de Ferramentas
 | Camada | Ferramenta | Função |
 |----------|----------|----------|
-| Storage/DW  | PostgreSQL Local   | Armazena a fonte transacional e o modelo dimensional  |
-| Linha 2  | Dado 2   | Valor 2  |
+| Storage/DW | PostgreSQL Local | Armazena a fonte transacional e o modelo dimensional  |
+| Transformação (ETL) | dbt-core + dbt-postgres | Define modelos SQL versionados, snapshots para SCDs, documentação e linhagem automáticas |
 | Linha 3  | Dado 3   | Valor 3  |
 | Linha 4  | Dado 4   | Valor 4  |
 | Linha 5  | Dado 5   | Valor 5  |

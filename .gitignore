@@ -219,3 +219,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+profiles.yml
+# Added by ggshield
+.cache_ggshield

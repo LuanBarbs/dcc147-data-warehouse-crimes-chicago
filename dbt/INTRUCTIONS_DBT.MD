@@ -21,7 +21,7 @@ Insira as informações para conecção com o postgres
 ### 4. Entrar na pasta do projeto e instalar dependências (dbt_utils)
 
 ```bash
-cd dw_crimes_chicago
+cd crimes_chicago
 dbt deps
 ```
 
