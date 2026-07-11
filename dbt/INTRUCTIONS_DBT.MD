@@ -7,8 +7,6 @@
 
 ### 2. Instalar dbt-core e o adaptador Postgres 
 
-Recomenda-se um ambiente virtual isolado:
-
 ```bash
 pip install dbt-core dbt-postgres
 dbt --version                     # confirma a instalação
@@ -18,7 +16,7 @@ dbt --version                     # confirma a instalação
 ```bash
 dbt init
 ```
-Insira as inflrmações para conecção com o postgres
+Insira as informações para conecção com o postgres
 
 ### 4. Entrar na pasta do projeto e instalar dependências (dbt_utils)
 
@@ -49,8 +47,3 @@ As tabelas e vies vao aprarecer no Postgres
 dbt docs generate
 dbt docs serve
 ```
-
-Abre em `http://localhost:8080` — mostra o grafo de dependências (staging →
-dimensões → fatos) e a documentação de cada coluna, exatamente o que o
-enunciado pede como "documentação e linhagem automáticas".
-
