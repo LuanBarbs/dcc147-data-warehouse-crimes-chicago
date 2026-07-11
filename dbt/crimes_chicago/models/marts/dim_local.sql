@@ -9,7 +9,7 @@ with combinacoes as (
         beat,
         district,
         community_area,
-        count(*)                 as qtd_ocorrencias,
+        count(*)          as qtd_ocorrencias,
         max(date)         as ultima_ocorrencia
     from {{ ref('stg_crimes') }}
     where beat is not null
