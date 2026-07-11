@@ -39,30 +39,16 @@ agregado as (
         ano,
         mes,
         sk_distrito
-),
-
-ultimo_dia_mes as (
-    select
-        ano,
-        mes,
-        max(data_completa) as data_fim_mes
-    from {{ ref('dim_tempo') }}
-    group by
-        ano,
-        mes
 )
 
 select
 
     {{ dbt_utils.generate_surrogate_key(['a.ano','a.mes','a.sk_distrito'])}} as id,
-    dt.sk_tempo,
+    dtma.sk_tempo,
     a.sk_distrito,
     a.qtd_total_crimes
 
 from agregado a
-inner join ultimo_dia_mes u
-    on a.ano = u.ano
-   and a.mes = u.mes
-inner join {{ ref('dim_tempo') }} dt
-    on dt.data_completa = u.data_fim_mes
-   and dt.hora = 0
+inner join {{ ref('dim_tempo_mes_ano') }} dtma
+    on dtma.ano = a.ano
+   and dtma.mes = a.mes

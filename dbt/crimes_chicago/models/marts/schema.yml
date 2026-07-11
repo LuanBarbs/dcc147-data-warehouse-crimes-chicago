@@ -117,23 +117,34 @@ models:
   - name: fct_intervalo_ocorrencia
     description: >
       Fato agregado. Grão: beat x tipo de crime x dia. Processo de
-      negócio: "análise de intervalo entre crimes do mesmo tipo
-      na mesma região".
+      negócio para análise de intervalo entre crimes do mesmo tipo
+      na mesma região.
     columns:
       - name: id
         tests: [unique, not_null]
 
   - name: fct_total_crimes
     description: >
-      Fato agregado. Grão: mês x distrito x tipo de crime. Processo de
-      negócio: "acompanhamento gerencial mensal de volume de crimes por
-      distrito".
+      Fato agregado. Grão: mês x distrito x tipo de crime.
     columns:
       - name: id
         tests: [unique, not_null]
+      - name: sk_tempo
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tempo_mes_ano')
+                field: sk_tempo
+      - name: sk_distrito
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_distrito')
+                field: sk_distrito
       - name: qtd_total_crimes
         tests: [not_null]
-
+ 
   - name: fct_ranking_beat
     description: >
       Fato agregado. Grão: mês x beat. Processo de negócio:
@@ -142,5 +153,18 @@ models:
     columns:
       - name: id
         tests: [unique, not_null]
+      - name: sk_tempo
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_tempo_mes_ano')
+                field: sk_tempo
+      - name: sk_local
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_local')
+                field: sk_local
       - name: ranking_posicao
         tests: [not_null]
