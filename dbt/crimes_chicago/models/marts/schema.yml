@@ -7,7 +7,7 @@ models:
   - name: dim_tempo
     description: >
       Dimensão de calendário.  Grão: 1 linha por
-      combinação (dia, hora). Colunas iguais ao diagrama: sk_tempo,
+      combinação (dia, hora). Colunas: sk_tempo,
       data_completa, ano, trimestre, mes, dia, hora.
     columns:
       - name: sk_tempo
@@ -30,7 +30,7 @@ models:
   - name: dim_tempo_mes_ano
     description: >
       Dimensão com apenas mes e ano.  Grão: 1 linha por
-      combinação (ano, mes). Usada nos fatos fct_total_crimes e fct_ranking_beat
+      combinação (ano, mes). Usada nos fatos fct_total_crimes e fct_ranking_beat.
     columns:
       - name: sk_tempo
         tests: [unique, not_null]
@@ -54,21 +54,23 @@ models:
   
   - name: dim_distrito
     description: >
-      Dimensao do distrito usada no fato fct_total_crimes
+      Dimensao do distrito usada no fato fct_total_crimes. Grão: distrito.
     columns:
       - name: sk_distrito
         tests: [unique, not_null]
 
   - name: dim_local_evento
     description: >
-      Dimensão do tipo de local do evento, casa, rua, ect. Colunas sk_local_evento, location_description 
+      Dimensão do tipo de local do evento, casa, rua, ect.
+      Colunas: sk_local_evento, location_description.
     columns:
       - name: sk_local_evento
         tests: [unique, not_null]
 
   - name: dim_tipo_crime
     description: >
-      Dimensão SCD Tipo 2 de tipo de crime (IUCR). São necessárias para o controle de histórico da SCD2
+      Dimensão SCD Tipo 2 de tipo de crime (IUCR). 
+      São necessárias para o controle de histórico da SCD2.
     columns:
       - name: sk_tipo_crime
         tests: [unique, not_null]
@@ -81,7 +83,7 @@ models:
   # ---------------------------------------------------------------------
   - name: fct_crime
     description: >
-      Fato atômico e transacional. Grão real: 1 linha por crime 
+      Fato atômico e transacional. Grão: 1 linha por crime 
     columns:
       - name: id
         tests: [unique, not_null]
@@ -147,9 +149,9 @@ models:
  
   - name: fct_ranking_beat
     description: >
-      Fato agregado. Grão: mês x beat. Processo de negócio:
-      "ranking mensal dos beats com mais crimes, para priorização de
-      policiamento".
+      Fato agregado. Grão: mês x beat. 
+      Processo de negócio: ranking mensal dos beats com mais crimes, 
+      para priorização de policiamento.
     columns:
       - name: id
         tests: [unique, not_null]

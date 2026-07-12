@@ -4,7 +4,7 @@ models:
   - name: stg_crimes
     description: >
       Camada de staging sobre a source raw.crimes_raw. Um registro por
-      crime, deduplicado por id mantendo a versão com updated_at mais recente.
+      crime, deduplicado por id mantendo a versão com updated_on mais recente.
     columns:
       - name: id
         description: Chave natural do crime na fonte (campo "ID" do portal de Chicago).

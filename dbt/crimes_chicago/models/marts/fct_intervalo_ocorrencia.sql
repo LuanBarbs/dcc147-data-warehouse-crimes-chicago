@@ -37,7 +37,6 @@ com_intervalo as (
 ),
 
 por_dia as (
-
     select
         sk_local,
         sk_tipo_crime,
@@ -50,21 +49,14 @@ por_dia as (
         )[1] as lag_ocorrencia
 
     from com_intervalo
-
     group by
         sk_local,
         sk_tipo_crime,
         data_ocorrencia
-
 )
 
 select
-
-    {{
-        dbt_utils.generate_surrogate_key(
-            ['sk_local', 'sk_tipo_crime', 'data_ocorrencia']
-        )
-    }} as id,
+    {{ dbt_utils.generate_surrogate_key(['sk_local', 'sk_tipo_crime', 'data_ocorrencia'])}} as id,
 
     dt.sk_tempo,
     p.sk_local,
@@ -73,7 +65,6 @@ select
     p.media_intervalo
 
 from por_dia p
-
 inner join {{ ref('dim_tempo') }} dt
     on dt.data_completa = p.data_ocorrencia
    and dt.hora = 0

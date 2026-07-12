@@ -6,26 +6,26 @@ sources:
     description: >
       Espelho da fonte transacional. Tabela carregada script Python
       a partir do CSV de Crimes em Chicago. Representa a
-      "fonte de dados transacionais" da arquitetura Kimball.
+      fonte de dados transacionais da arquitetura Kimball.
     tables:
       - name: crimes_raw
         columns:
           - name: id
-            description: Identificador único do registro na fonte (chave primária natural).
+            description: Identificador único do registro na fonte.
           - name: case_number
             description: Número do boletim de ocorrência (BO). Pode se repetir entre registros relacionados.
           - name: date
-            description: Data/hora em que o crime ocorreu (ou foi reportado, quando a hora exata é desconhecida).
+            description: Data e hora em que o crime ocorreu ou foi reportado.
           - name: block
-            description: Endereço parcialmente anonimizado (quarteirão) do local do crime.
+            description: Endereço do local do crime.
           - name: iucr
             description: Illinois Uniform Crime Reporting code - código do tipo de crime.
           - name: primary_type
-            description: Categoria primária do crime (ex. THEFT, BATTERY, NARCOTICS).
+            description: Categoria primária do crime (THEFT, BATTERY, NARCOTICS).
           - name: description
             description: Descrição secundária/detalhada do IUCR.
           - name: location_description
-            description: Descrição do tipo de local onde ocorreu o crime (ex. STREET, RESIDENCE).
+            description: Descrição do tipo de local onde ocorreu o crime (STREET, RESIDENCE).
           - name: arrest
             description: Indica se houve prisão em flagrante associada ao crime.
           - name: domestic
@@ -33,19 +33,19 @@ sources:
           - name: beat
             description: Menor unidade geográfica de policiamento em Chicago.
           - name: district
-            description: Distrito policial (agrupa vários beats).
+            description: Distrito policial.
           - name: ward
-            description: Distrito eleitoral (ward) onde ocorreu o crime.
+            description: Distrito eleitoral onde ocorreu o crime.
           - name: community_area
             description: Uma das 77 áreas comunitárias oficiais de Chicago.
           - name: fbi_code
             description: Classificação de crime segundo o FBI (NIBRS).
           - name: x_coordinate
-            description: Coordenada X no sistema de projeção Illinois State Plane.
+            description: Coordenada X.
           - name: y_coordinate
-            description: Coordenada Y no sistema de projeção Illinois State Plane.
+            description: Coordenada Y.
           - name: year
-            description: Ano extraído de "date" (coluna redundante já na fonte).
+            description: Ano extraído de "date".
           - name: updated_on
             description: Timestamp da última atualização do registro na fonte.
           - name: latitude

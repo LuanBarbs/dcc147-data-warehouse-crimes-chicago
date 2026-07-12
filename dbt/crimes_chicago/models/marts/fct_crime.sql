@@ -18,7 +18,6 @@ with crimes as (
 ),
 
 com_tipo_crime as (
-
     select
         c.*,
         coalesce(dtc_vigente.sk_tipo_crime, dtc_mais_antiga.sk_tipo_crime) as sk_tipo_crime
@@ -39,7 +38,6 @@ com_tipo_crime as (
         order by dtc.vigente_desde asc
         limit 1
     ) dtc_mais_antiga on true
-
 )
 
 select
@@ -49,7 +47,7 @@ select
     dl.sk_local,
     dle.sk_local_evento,
     c.sk_tipo_crime,
-    1                                        as quant_crime,        -- 1 por linha
+    1                               as quant_crime, -- 1 por linha
     (c.updated_on > date)           as teve_atualizacao,
     c.is_domestic,
     c.is_arrest,
